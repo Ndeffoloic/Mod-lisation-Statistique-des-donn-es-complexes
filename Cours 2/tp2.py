@@ -16,6 +16,14 @@ file_path = os.path.join(os.path.dirname(__file__), file_name)
 # Lire le fichier dans un DataFrame avec les bons séparateurs
 data = pd.read_csv(file_path, sep='\t', decimal=',')
 
+# Fonction pour convertir les lettres en indices alphabétiques
+def letter_to_index(letter):
+    return ord(letter.upper()) - ord('A') + 1
+
+# Appliquer la fonction aux colonnes 'Sexe' et 'Origine'
+data['Sexe'] = data['Sexe'].apply(letter_to_index)
+data['origine'] = data['origine'].apply(letter_to_index)
+
 # Sélectionner les variables d'intérêt
 variables = ['origine', 'Sexe', 'AGE', 'TAILLE_EN_M', 'POIDS', 'BMI', 'TLCO']
 data_selected = data[variables]

@@ -44,6 +44,9 @@ y = data_selected['TLCO']
 # Convertir les variables catégorielles en variables numériques
 X = pd.get_dummies(X, drop_first=True)
 
+# Vérifier les types de données pour s'assurer qu'ils sont tous numériques
+print(X.dtypes)
+
 # Ajouter une constante pour le modèle OLS
 X = add_constant(X)
 

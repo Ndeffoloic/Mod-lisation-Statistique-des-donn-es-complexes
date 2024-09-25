@@ -1,0 +1,126 @@
+Premières lignes des données sélectionnées :
+   origine  Sexe  AGE  TAILLE_EN_M  POIDS        BMI   TLCO
+0        7    13   29         1.71     73  24.964946  46.60
+1        7    13   58         1.78     78  24.618104  25.60
+2        7     6   87         1.54     64  26.986001  12.15
+3        7    13   63         1.82     95  28.680111  29.70
+4        7     6   58         1.62     57  21.719250  28.60
+
+
+Nombre d'observations (n) : 307
+Nombre de variables explicatives (p) : 6
+
+
+Nombre de possibilités pour le sous-ensemble de données dans le modèle : 64
+
+
+Types de données des variables explicatives :
+origine          int64
+Sexe             int64
+AGE              int64
+TAILLE_EN_M    float64
+POIDS            int64
+BMI            float64
+dtype: object
+
+
+Résumé du modèle de régression linéaire :
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   TLCO   R-squared:                       0.735
+Model:                            OLS   Adj. R-squared:                  0.730
+Method:                 Least Squares   F-statistic:                     138.6
+Date:                Wed, 25 Sep 2024   Prob (F-statistic):           2.02e-83
+Time:                        11:59:27   Log-Likelihood:                -900.73
+No. Observations:                 307   AIC:                             1815.
+Df Residuals:                     300   BIC:                             1842.
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+const         -59.2988     36.289     -1.634      0.103    -130.713      12.115
+origine        -0.5920      0.127     -4.647      0.000      -0.843      -0.341
+Sexe            0.6176      0.112      5.522      0.000       0.398       0.838
+AGE            -0.2258      0.017    -13.632      0.000      -0.258      -0.193
+TAILLE_EN_M    56.5701     21.773      2.598      0.010      13.724      99.416
+POIDS          -0.2690      0.261     -1.032      0.303      -0.782       0.244
+BMI             0.8793      0.725      1.213      0.226      -0.547       2.305
+==============================================================================
+Omnibus:                        8.818   Durbin-Watson:                   1.901
+Prob(Omnibus):                  0.012   Jarque-Bera (JB):                8.971
+Skew:                           0.393   Prob(JB):                       0.0113
+Kurtosis:                       2.709   Cond. No.                     1.44e+04
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.44e+04. This might indicate that there are
+strong multicollinearity or other numerical problems.
+
+
+Premiers résidus :
+0    9.513087
+1   -7.248473
+2   -2.098277
+3   -3.280785
+4    6.025904
+dtype: float64
+
+
+RSS : 6354.345641548021
+
+
+RSS2 : 6354.345641548021
+
+
+Sigma^2 : 21.181152138493406
+
+
+R-squared : 0.7349046500245712
+Adjusted R-squared : 0.7296027430250627
+
+
+AIC : 1815.4525236012732
+BIC : 1841.5404578343837
+
+
+Cp : 7.0
+
+
+Excluding POIDS with p-value 0.3030767000065624
+Excluding BMI with p-value 0.11395593292273427
+Selected features: ['const', 'origine', 'Sexe', 'AGE', 'TAILLE_EN_M']
+
+
+Résumé du modèle final après sélection backward stepwise :
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   TLCO   R-squared:                       0.732
+Model:                            OLS   Adj. R-squared:                  0.728
+Method:                 Least Squares   F-statistic:                     205.9
+Date:                Wed, 25 Sep 2024   Prob (F-statistic):           5.73e-85
+Time:                        11:59:27   Log-Likelihood:                -902.55
+No. Observations:                 307   AIC:                             1815.
+Df Residuals:                     302   BIC:                             1834.
+Df Model:                           4                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+const         -17.9447      6.606     -2.716      0.007     -30.945      -4.944
+origine        -0.5781      0.127     -4.555      0.000      -0.828      -0.328
+Sexe            0.6782      0.105      6.487      0.000       0.472       0.884
+AGE            -0.2188      0.016    -13.738      0.000      -0.250      -0.187
+TAILLE_EN_M    33.0624      4.077      8.109      0.000      25.039      41.086
+==============================================================================
+Omnibus:                        9.653   Durbin-Watson:                   1.891
+Prob(Omnibus):                  0.008   Jarque-Bera (JB):                9.989
+Skew:                           0.422   Prob(JB):                      0.00678
+Kurtosis:                       2.739   Cond. No.                     1.56e+03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.56e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.

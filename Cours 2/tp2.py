@@ -28,103 +28,105 @@ data['origine'] = data['origine'].apply(letter_to_index)
 variables = ['origine', 'Sexe', 'AGE', 'TAILLE_EN_M', 'POIDS', 'BMI', 'TLCO']
 data_selected = data[variables]
 
-# Afficher les premières lignes pour vérifier les données
-pd.set_option('display.max_columns', None)  # Afficher toutes les colonnes
-pd.set_option('display.width', None)  # Ajuster la largeur d'affichage
-print(data_selected.head())
+# Rediriger la sortie vers un fichier
+with open('results.txt', 'w') as out:
+    # Afficher les premières lignes pour vérifier les données
+    pd.set_option('display.max_columns', None)  # Afficher toutes les colonnes
+    pd.set_option('display.width', None)  # Ajuster la largeur d'affichage
+    out.write(data_selected.head().to_string() + '\n')
 
-# Calculer les valeurs de n et p
-n = data_selected.shape[0]  # nombre d'observations
-p = data_selected.shape[1] - 1  # nombre de variables explicatives (excluant TLCO)
+    # Calculer les valeurs de n et p
+    n = data_selected.shape[0]  # nombre d'observations
+    p = data_selected.shape[1] - 1  # nombre de variables explicatives (excluant TLCO)
 
-print(f"Nombre d'observations (n) : {n}")
-print(f"Nombre de variables explicatives (p) : {p}")
+    out.write(f"Nombre d'observations (n) : {n}\n")
+    out.write(f"Nombre de variables explicatives (p) : {p}\n")
 
-# Calculer le nombre de possibilités pour le sous-ensemble de données dans le modèle
-# Le nombre de sous-ensembles possibles est 2^p
-num_possibilities = 2 ** p
-print(f"Nombre de possibilités pour le sous-ensemble de données dans le modèle : {num_possibilities}")
+    # Calculer le nombre de possibilités pour le sous-ensemble de données dans le modèle
+    # Le nombre de sous-ensembles possibles est 2^p
+    num_possibilities = 2 ** p
+    out.write(f"Nombre de possibilités pour le sous-ensemble de données dans le modèle : {num_possibilities}\n")
 
-# Préparer les données pour la régression
-X = data_selected[['origine', 'Sexe', 'AGE', 'TAILLE_EN_M', 'POIDS', 'BMI']]
-y = data_selected['TLCO']
+    # Préparer les données pour la régression
+    X = data_selected[['origine', 'Sexe', 'AGE', 'TAILLE_EN_M', 'POIDS', 'BMI']]
+    y = data_selected['TLCO']
 
-# Convertir les variables catégorielles en variables numériques
-X = pd.get_dummies(X, drop_first=True)
+    # Convertir les variables catégorielles en variables numériques
+    X = pd.get_dummies(X, drop_first=True)
 
-# Vérifier les types de données pour s'assurer qu'ils sont tous numériques
-print(X.dtypes)
+    # Vérifier les types de données pour s'assurer qu'ils sont tous numériques
+    out.write(X.dtypes.to_string() + '\n')
 
-# Ajouter une constante pour le modèle OLS
-X = add_constant(X)
+    # Ajouter une constante pour le modèle OLS
+    X = add_constant(X)
 
-# Créer et ajuster le modèle de régression linéaire
-model = OLS(y, X).fit()
+    # Créer et ajuster le modèle de régression linéaire
+    model = OLS(y, X).fit()
 
-# Afficher les coefficients du modèle
-print(model.summary())
+    # Afficher les coefficients du modèle
+    out.write(model.summary().as_text() + '\n')
 
-# Calculer les résidus
-residuals = model.resid
-print("Premiers résidus :")
-print(residuals.head())
+    # Calculer les résidus
+    residuals = model.resid
+    out.write("Premiers résidus :\n")
+    out.write(residuals.head().to_string() + '\n')
 
-# Calculer RSS
-RSS = np.sum(residuals ** 2)
-print(f"RSS : {RSS}")
+    # Calculer RSS
+    RSS = np.sum(residuals ** 2)
+    out.write(f"RSS : {RSS}\n")
 
-# Prédictions
-predictions = model.predict(X)
-RSS2 = np.sum((predictions - y) ** 2)
-print(f"RSS2 : {RSS2}")
+    # Prédictions
+    predictions = model.predict(X)
+    RSS2 = np.sum((predictions - y) ** 2)
+    out.write(f"RSS2 : {RSS2}\n")
 
-# Calculer sigma^2
-sigma_squared = model.mse_resid
-print(f"Sigma^2 : {sigma_squared}")
-
-# R-squared et Adjusted R-squared
-r_squared = model.rsquared
-adj_r_squared = model.rsquared_adj
-print(f"R-squared : {r_squared}")
-print(f"Adjusted R-squared : {adj_r_squared}")
-
-# Calculer AIC et BIC
-AIC = model.aic
-BIC = model.bic
-print(f"AIC : {AIC}")
-print(f"BIC : {BIC}")
-
-# Fonction pour calculer Cp
-def calculate_cp(model, X, y):
-    n = len(y)
-    p = X.shape[1]
-    RSS = np.sum(model.resid ** 2)
+    # Calculer sigma^2
     sigma_squared = model.mse_resid
-    Cp = RSS / sigma_squared - n + 2 * p
-    return Cp
+    out.write(f"Sigma^2 : {sigma_squared}\n")
 
-Cp = calculate_cp(model, X, y)
-print(f"Cp : {Cp}")
+    # R-squared et Adjusted R-squared
+    r_squared = model.rsquared
+    adj_r_squared = model.rsquared_adj
+    out.write(f"R-squared : {r_squared}\n")
+    out.write(f"Adjusted R-squared : {adj_r_squared}\n")
 
-# Sélection backward stepwise
-def backward_stepwise_selection(X, y, significance_level=0.05):
-    initial_features = X.columns.tolist()
-    best_features = initial_features.copy()
-    while len(best_features) > 0:
-        model = OLS(y, X[best_features]).fit()
-        p_values = model.pvalues
-        max_p_value = p_values.max()
-        if max_p_value > significance_level:
-            excluded_feature = p_values.idxmax()
-            best_features.remove(excluded_feature)
-            print(f"Excluding {excluded_feature} with p-value {max_p_value}")
-        else:
-            break
-    return best_features
+    # Calculer AIC et BIC
+    AIC = model.aic
+    BIC = model.bic
+    out.write(f"AIC : {AIC}\n")
+    out.write(f"BIC : {BIC}\n")
 
-selected_features = backward_stepwise_selection(X, y)
-print(f"Selected features: {selected_features}")
+    # Fonction pour calculer Cp
+    def calculate_cp(model, X, y):
+        n = len(y)
+        p = X.shape[1]
+        RSS = np.sum(model.resid ** 2)
+        sigma_squared = model.mse_resid
+        Cp = RSS / sigma_squared - n + 2 * p
+        return Cp
 
-# Ajuster le modèle final avec les variables sélectionnées
-final_model = OLS(y, X[selected_features]).fit()
-print(final_model.summary())
+    Cp = calculate_cp(model, X, y)
+    out.write(f"Cp : {Cp}\n")
+
+    # Sélection backward stepwise
+    def backward_stepwise_selection(X, y, significance_level=0.05):
+        initial_features = X.columns.tolist()
+        best_features = initial_features.copy()
+        while len(best_features) > 0:
+            model = OLS(y, X[best_features]).fit()
+            p_values = model.pvalues
+            max_p_value = p_values.max()
+            if max_p_value > significance_level:
+                excluded_feature = p_values.idxmax()
+                best_features.remove(excluded_feature)
+                out.write(f"Excluding {excluded_feature} with p-value {max_p_value}\n")
+            else:
+                break
+        return best_features
+
+    selected_features = backward_stepwise_selection(X, y)
+    out.write(f"Selected features: {selected_features}\n")
+
+    # Ajuster le modèle final avec les variables sélectionnées
+    final_model = OLS(y, X[selected_features]).fit()
+    out.write(final_model.summary().as_text() + '\n')

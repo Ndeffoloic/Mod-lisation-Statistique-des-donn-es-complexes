@@ -1,0 +1,21 @@
+
+--- Simulation pour p=100 ---
+Min p-value pour p=100: 0.00023398762292395125
+Max p-value pour p=100: 0.9993850900201515
+Histogram saved as histogram_p_100.png
+Nombre de faux positifs pour p=100: 6
+L'erreur de type I empirique est 0.06, ce qui est greater than or equal to alpha.
+
+--- Simulation pour p=1000 ---
+Min p-value pour p=1000: 0.0006572517109373521
+Max p-value pour p=1000: 0.9987405337306963
+Histogram saved as histogram_p_1000.png
+Nombre de faux positifs pour p=1000: 50
+L'erreur de type I empirique est 0.05, ce qui est greater than or equal to alpha.
+
+--- Simulation pour p=10000 ---
+Min p-value pour p=10000: 1.1370743037604348e-05
+Max p-value pour p=10000: 0.9999043369532445
+Histogram saved as histogram_p_10000.png
+Nombre de faux positifs pour p=10000: 513
+L'erreur de type I empirique est 0.05, ce qui est greater than or equal to alpha.

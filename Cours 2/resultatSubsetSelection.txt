@@ -214,6 +214,8 @@ R-squared : 0.734
 AIC : 1815
 BIC : 1837
 Variables significatives : TAILLE_EN_M, AGE, Sexe, origine, BMI
+
+
 Conclusion :
 Les trois modèles ont des performances très similaires en termes de R-squared, AIC, et BIC. 
 Cependant, le modèle après sélection backward stepwise semble être le plus simple avec un BIC 

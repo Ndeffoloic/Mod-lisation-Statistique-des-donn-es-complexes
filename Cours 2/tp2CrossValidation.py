@@ -127,10 +127,10 @@ with open('resultat.txt', 'w') as f:
         print("\n")
 
         # Sélection backward stepwise
-        def backward_stepwise_selection(X, y, significance_level=0.05):
+        def backward_stepwise_selection(X, y, num_features, significance_level=0.05):
             initial_features = X.columns.tolist()
             best_features = initial_features.copy()
-            while len(best_features) > 0:
+            while len(best_features) > num_features:
                 model = OLS(y, X[best_features]).fit()
                 p_values = model.pvalues
                 max_p_value = p_values.max()
@@ -141,24 +141,30 @@ with open('resultat.txt', 'w') as f:
                 else:
                     break
             return best_features
-
-        selected_features = backward_stepwise_selection(X, y)
+        
+        for num_features in range(1, 7):
+            selected_features = backward_stepwise_selection(X, y, num_features)
+            print(f"Selected features for {num_features} variables: {selected_features}")
+            print("\n")
+        
+        # Ajuster le modèle final avec les variables sélectionnées pour un nombre spécifique de variables
+        num_features_final = 3  # Par exemple, ajuster pour 3 variables
+        selected_features = backward_stepwise_selection(X, y, num_features_final)
         print(f"Selected features: {selected_features}")
         print("\n")
-
+        
         # Ajuster le modèle final avec les variables sélectionnées
         final_model = OLS(y, X[selected_features]).fit()
         print("Résumé du modèle final après sélection backward stepwise :")
         print(final_model.summary())
         print("\n")
-
-        # Sélection forward stepwise avec AIC
-        def forward_stepwise_selection(X, y, criterion='aic'):
+        
+        def forward_stepwise_selection(X, y, num_features, criterion='aic'):
             initial_features = []
             best_features = initial_features.copy()
             remaining_features = list(X.columns)
             current_score, best_new_score = float('inf'), float('inf')
-            while remaining_features and current_score == best_new_score:
+            while len(best_features) < num_features and remaining_features and current_score == best_new_score:
                 scores_with_candidates = []
                 for candidate in remaining_features:
                     features = best_features + [candidate]
@@ -175,6 +181,15 @@ with open('resultat.txt', 'w') as f:
                     best_features.append(best_candidate)
                     current_score = best_new_score
             return best_features
+
+        for num_features in range(1, 7):
+            selected_features_aic = forward_stepwise_selection(X, y, num_features, criterion='aic')
+            print(f"Selected features with AIC for {num_features} variables: {selected_features_aic}")
+            print("\n")
+
+            selected_features_bic = forward_stepwise_selection(X, y, num_features, criterion='bic')
+            print(f"Selected features with BIC for {num_features} variables: {selected_features_bic}")
+            print("\n")
 
         selected_features_aic = forward_stepwise_selection(X, y, criterion='aic')
         print(f"Selected features with AIC: {selected_features_aic}")

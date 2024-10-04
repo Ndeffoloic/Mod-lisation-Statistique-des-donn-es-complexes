@@ -4,7 +4,6 @@ from math import log
 
 import numpy as np
 import pandas as pd
-from mlxtend.feature_selection import SequentialFeatureSelector as SFS
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from statsmodels.api import OLS, add_constant
@@ -195,43 +194,3 @@ with open('resultat.txt', 'w') as f:
         final_model_bic = OLS(y, X[selected_features_bic]).fit()
         print("Résumé du modèle final après sélection forward stepwise avec BIC :")
         print(final_model_bic.summary())
-        print("\n")
-
-        # Question 7: Utiliser le package mlxtend pour la sélection stepwise
-        lr = LinearRegression()
-        sfs = SFS(lr, 
-                  k_features='best', 
-                  forward=True, 
-                  floating=False, 
-                  scoring='neg_mean_squared_error',
-                  cv=0)
-        sfs = sfs.fit(X, y)
-        print("Features sélectionnées par mlxtend (forward stepwise) :")
-        print(sfs.k_feature_names_)
-        print("\n")
-
-        # Question 8: Backward stepwise selection avec BIC
-        def backward_stepwise_selection_bic(X, y):
-            initial_features = X.columns.tolist()
-            best_features = initial_features.copy()
-            while len(best_features) > 0:
-                model = OLS(y, X[best_features]).fit()
-                bic_values = model.bic
-                max_bic_value = bic_values.max()
-                if max_bic_value > significance_level:
-                    excluded_feature = bic_values.idxmax()
-                    best_features.remove(excluded_feature)
-                    print(f"Excluding {excluded_feature} with BIC {max_bic_value}")
-                else:
-                    break
-            return best_features
-
-        selected_features_bic = backward_stepwise_selection_bic(X, y)
-        print(f"Selected features with BIC (backward stepwise): {selected_features_bic}")
-        print("\n")
-
-        # Ajuster le modèle final avec les variables sélectionnées par backward stepwise avec BIC
-        final_model_bic_backward = OLS(y, X[selected_features_bic]).fit()
-        print("Résumé du modèle final après sélection backward stepwise avec BIC :")
-        print(final_model_bic_backward.summary())
-        print("\n")

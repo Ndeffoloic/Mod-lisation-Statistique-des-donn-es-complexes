@@ -1,4 +1,4 @@
-Premières lignes des données sélectionnées :
+Premiï¿½res lignes des donnï¿½es sï¿½lectionnï¿½es :
    origine  Sexe  AGE  TAILLE_EN_M  POIDS        BMI   TLCO
 0        7    13   29         1.71     73  24.964946  46.60
 1        7    13   58         1.78     78  24.618104  25.60
@@ -11,10 +11,10 @@ Nombre d'observations (n) : 307
 Nombre de variables explicatives (p) : 6
 
 
-Nombre de possibilités pour le sous-ensemble de données dans le modèle : 64
+Nombre de possibilitï¿½s pour le sous-ensemble de donnï¿½es dans le modï¿½le : 64
 
 
-Types de données des variables explicatives :
+Types de donnï¿½es des variables explicatives :
 origine          int64
 Sexe             int64
 AGE              int64
@@ -24,14 +24,14 @@ BMI            float64
 dtype: object
 
 
-Résumé du modèle de régression linéaire :
+Rï¿½sumï¿½ du modï¿½le de rï¿½gression linï¿½aire :
                             OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                   TLCO   R-squared:                       0.735
 Model:                            OLS   Adj. R-squared:                  0.730
 Method:                 Least Squares   F-statistic:                     138.6
-Date:                Wed, 25 Sep 2024   Prob (F-statistic):           2.02e-83
-Time:                        12:11:17   Log-Likelihood:                -900.73
+Date:                Fri, 04 Oct 2024   Prob (F-statistic):           2.02e-83
+Time:                        09:32:52   Log-Likelihood:                -900.73
 No. Observations:                 307   AIC:                             1815.
 Df Residuals:                     300   BIC:                             1842.
 Df Model:                           6                                         
@@ -59,7 +59,7 @@ Notes:
 strong multicollinearity or other numerical problems.
 
 
-Premiers résidus :
+Premiers rï¿½sidus :
 0    9.513087
 1   -7.248473
 2   -2.098277
@@ -93,14 +93,14 @@ Excluding BMI with p-value 0.11395593292273427
 Selected features: ['const', 'origine', 'Sexe', 'AGE', 'TAILLE_EN_M']
 
 
-Résumé du modèle final après sélection backward stepwise :
+Rï¿½sumï¿½ du modï¿½le final aprï¿½s sï¿½lection backward stepwise :
                             OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                   TLCO   R-squared:                       0.732
 Model:                            OLS   Adj. R-squared:                  0.728
 Method:                 Least Squares   F-statistic:                     205.9
-Date:                Wed, 25 Sep 2024   Prob (F-statistic):           5.73e-85
-Time:                        12:11:17   Log-Likelihood:                -902.55
+Date:                Fri, 04 Oct 2024   Prob (F-statistic):           5.73e-85
+Time:                        09:32:52   Log-Likelihood:                -902.55
 No. Observations:                 307   AIC:                             1815.
 Df Residuals:                     302   BIC:                             1834.
 Df Model:                           4                                         
@@ -132,14 +132,14 @@ Selected features with AIC: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const', '
 Selected features with BIC: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const']
 
 
-Résumé du modèle final après sélection forward stepwise avec AIC :
+Rï¿½sumï¿½ du modï¿½le final aprï¿½s sï¿½lection forward stepwise avec AIC :
                             OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                   TLCO   R-squared:                       0.734
 Model:                            OLS   Adj. R-squared:                  0.730
 Method:                 Least Squares   F-statistic:                     166.1
-Date:                Wed, 25 Sep 2024   Prob (F-statistic):           2.52e-84
-Time:                        12:11:17   Log-Likelihood:                -901.27
+Date:                Fri, 04 Oct 2024   Prob (F-statistic):           2.52e-84
+Time:                        09:32:52   Log-Likelihood:                -901.27
 No. Observations:                 307   AIC:                             1815.
 Df Residuals:                     301   BIC:                             1837.
 Df Model:                           5                                         
@@ -166,14 +166,14 @@ Notes:
 strong multicollinearity or other numerical problems.
 
 
-Résumé du modèle final après sélection forward stepwise avec BIC :
+Rï¿½sumï¿½ du modï¿½le final aprï¿½s sï¿½lection forward stepwise avec BIC :
                             OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                   TLCO   R-squared:                       0.732
 Model:                            OLS   Adj. R-squared:                  0.728
 Method:                 Least Squares   F-statistic:                     205.9
-Date:                Wed, 25 Sep 2024   Prob (F-statistic):           5.73e-85
-Time:                        12:11:17   Log-Likelihood:                -902.55
+Date:                Fri, 04 Oct 2024   Prob (F-statistic):           5.73e-85
+Time:                        09:32:52   Log-Likelihood:                -902.55
 No. Observations:                 307   AIC:                             1815.
 Df Residuals:                     302   BIC:                             1834.
 Df Model:                           4                                         
@@ -197,3 +197,25 @@ Notes:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 [2] The condition number is large, 1.56e+03. This might indicate that there are
 strong multicollinearity or other numerical problems.
+
+Comparaison des modÃ¨les :
+ModÃ¨le initial :
+R-squared : 0.735
+AIC : 1815
+BIC : 1842
+Variables significatives : origine, Sexe, AGE, TAILLE_EN_M
+ModÃ¨le aprÃ¨s sÃ©lection backward stepwise :
+R-squared : 0.732
+AIC : 1815
+BIC : 1834
+Variables significatives : origine, Sexe, AGE, TAILLE_EN_M
+ModÃ¨le aprÃ¨s sÃ©lection forward stepwise avec AIC :
+R-squared : 0.734
+AIC : 1815
+BIC : 1837
+Variables significatives : TAILLE_EN_M, AGE, Sexe, origine, BMI
+Conclusion :
+Les trois modÃ¨les ont des performances trÃ¨s similaires en termes de R-squared, AIC, et BIC. 
+Cependant, le modÃ¨le aprÃ¨s sÃ©lection backward stepwise semble Ãªtre le plus simple avec un BIC 
+lÃ©gÃ¨rement infÃ©rieur (1834) et un nombre rÃ©duit de variables significatives. Cela pourrait 
+indiquer quâ€™il est le plus efficace tout en Ã©vitant la sur-spÃ©cification.

@@ -31,7 +31,7 @@ Dep. Variable:                   TLCO   R-squared:                       0.735
 Model:                            OLS   Adj. R-squared:                  0.730
 Method:                 Least Squares   F-statistic:                     138.6
 Date:                Fri, 04 Oct 2024   Prob (F-statistic):           2.02e-83
-Time:                        10:43:16   Log-Likelihood:                -900.73
+Time:                        11:02:12   Log-Likelihood:                -900.73
 No. Observations:                 307   AIC:                             1815.
 Df Residuals:                     300   BIC:                             1842.
 Df Model:                           6                                         
@@ -129,7 +129,7 @@ Dep. Variable:                   TLCO   R-squared:                       0.732
 Model:                            OLS   Adj. R-squared:                  0.728
 Method:                 Least Squares   F-statistic:                     205.9
 Date:                Fri, 04 Oct 2024   Prob (F-statistic):           5.73e-85
-Time:                        10:43:16   Log-Likelihood:                -902.55
+Time:                        11:02:12   Log-Likelihood:                -902.55
 No. Observations:                 307   AIC:                             1815.
 Df Residuals:                     302   BIC:                             1834.
 Df Model:                           4                                         
@@ -155,31 +155,31 @@ Notes:
 strong multicollinearity or other numerical problems.
 
 
-Selected features with AIC for 1 variables: ['TAILLE_EN_M']
+Selected features with AIC for 1 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const', 'BMI']
 
 
-Selected features with BIC for 1 variables: ['TAILLE_EN_M']
+Selected features with BIC for 1 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const']
 
 
-Selected features with AIC for 2 variables: ['TAILLE_EN_M', 'AGE']
+Selected features with AIC for 2 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const', 'BMI']
 
 
-Selected features with BIC for 2 variables: ['TAILLE_EN_M', 'AGE']
+Selected features with BIC for 2 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const']
 
 
-Selected features with AIC for 3 variables: ['TAILLE_EN_M', 'AGE', 'Sexe']
+Selected features with AIC for 3 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const', 'BMI']
 
 
-Selected features with BIC for 3 variables: ['TAILLE_EN_M', 'AGE', 'Sexe']
+Selected features with BIC for 3 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const']
 
 
-Selected features with AIC for 4 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine']
+Selected features with AIC for 4 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const', 'BMI']
 
 
-Selected features with BIC for 4 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine']
+Selected features with BIC for 4 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const']
 
 
-Selected features with AIC for 5 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const']
+Selected features with AIC for 5 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const', 'BMI']
 
 
 Selected features with BIC for 5 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const']
@@ -189,5 +189,72 @@ Selected features with AIC for 6 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'orig
 
 
 Selected features with BIC for 6 variables: ['TAILLE_EN_M', 'AGE', 'Sexe', 'origine', 'const']
+
+
+Résumé du modèle final après sélection forward stepwise avec AIC :
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   TLCO   R-squared:                       0.734
+Model:                            OLS   Adj. R-squared:                  0.730
+Method:                 Least Squares   F-statistic:                     166.1
+Date:                Fri, 04 Oct 2024   Prob (F-statistic):           2.52e-84
+Time:                        11:02:12   Log-Likelihood:                -901.27
+No. Observations:                 307   AIC:                             1815.
+Df Residuals:                     301   BIC:                             1837.
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+TAILLE_EN_M    34.5247      4.170      8.279      0.000      26.318      42.731
+AGE            -0.2262      0.017    -13.662      0.000      -0.259      -0.194
+Sexe            0.6142      0.112      5.493      0.000       0.394       0.834
+origine        -0.5986      0.127     -4.704      0.000      -0.849      -0.348
+const         -22.6094      7.217     -3.133      0.002     -36.811      -8.407
+BMI             0.1371      0.086      1.585      0.114      -0.033       0.307
+==============================================================================
+Omnibus:                        9.177   Durbin-Watson:                   1.900
+Prob(Omnibus):                  0.010   Jarque-Bera (JB):                9.481
+Skew:                           0.411   Prob(JB):                      0.00873
+Kurtosis:                       2.745   Cond. No.                     1.82e+03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.82e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.
+
+
+Résumé du modèle final après sélection forward stepwise avec BIC :
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   TLCO   R-squared:                       0.732
+Model:                            OLS   Adj. R-squared:                  0.728
+Method:                 Least Squares   F-statistic:                     205.9
+Date:                Fri, 04 Oct 2024   Prob (F-statistic):           5.73e-85
+Time:                        11:02:12   Log-Likelihood:                -902.55
+No. Observations:                 307   AIC:                             1815.
+Df Residuals:                     302   BIC:                             1834.
+Df Model:                           4                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+TAILLE_EN_M    33.0624      4.077      8.109      0.000      25.039      41.086
+AGE            -0.2188      0.016    -13.738      0.000      -0.250      -0.187
+Sexe            0.6782      0.105      6.487      0.000       0.472       0.884
+origine        -0.5781      0.127     -4.555      0.000      -0.828      -0.328
+const         -17.9447      6.606     -2.716      0.007     -30.945      -4.944
+==============================================================================
+Omnibus:                        9.653   Durbin-Watson:                   1.891
+Prob(Omnibus):                  0.008   Jarque-Bera (JB):                9.989
+Skew:                           0.422   Prob(JB):                      0.00678
+Kurtosis:                       2.739   Cond. No.                     1.56e+03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.56e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.
 
 

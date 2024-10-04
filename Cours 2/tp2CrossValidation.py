@@ -159,12 +159,13 @@ with open('resultat.txt', 'w') as f:
         print(final_model.summary())
         print("\n")
         
-        def forward_stepwise_selection(X, y, num_features, criterion='aic'):
+        def forward_stepwise_selection(X, y, criterion='aic'):
             initial_features = []
             best_features = initial_features.copy()
             remaining_features = list(X.columns)
             current_score, best_new_score = float('inf'), float('inf')
-            while len(best_features) < num_features and remaining_features and current_score == best_new_score:
+            
+            while remaining_features and current_score == best_new_score:
                 scores_with_candidates = []
                 for candidate in remaining_features:
                     features = best_features + [candidate]
@@ -181,31 +182,25 @@ with open('resultat.txt', 'w') as f:
                     best_features.append(best_candidate)
                     current_score = best_new_score
             return best_features
-
+        
+        # Utiliser la fonction pour sélectionner les meilleures variables avec AIC et BIC
         for num_features in range(1, 7):
-            selected_features_aic = forward_stepwise_selection(X, y, num_features, criterion='aic')
+            selected_features_aic = forward_stepwise_selection(X, y, criterion='aic')
             print(f"Selected features with AIC for {num_features} variables: {selected_features_aic}")
             print("\n")
-
-            selected_features_bic = forward_stepwise_selection(X, y, num_features, criterion='bic')
+        
+            selected_features_bic = forward_stepwise_selection(X, y, criterion='bic')
             print(f"Selected features with BIC for {num_features} variables: {selected_features_bic}")
             print("\n")
-
-        selected_features_aic = forward_stepwise_selection(X, y, criterion='aic')
-        print(f"Selected features with AIC: {selected_features_aic}")
-        print("\n")
-
-        selected_features_bic = forward_stepwise_selection(X, y, criterion='bic')
-        print(f"Selected features with BIC: {selected_features_bic}")
-        print("\n")
-
+        
         # Ajuster le modèle final avec les variables sélectionnées par AIC
         final_model_aic = OLS(y, X[selected_features_aic]).fit()
         print("Résumé du modèle final après sélection forward stepwise avec AIC :")
         print(final_model_aic.summary())
         print("\n")
-
+        
         # Ajuster le modèle final avec les variables sélectionnées par BIC
         final_model_bic = OLS(y, X[selected_features_bic]).fit()
         print("Résumé du modèle final après sélection forward stepwise avec BIC :")
         print(final_model_bic.summary())
+        print("\n")

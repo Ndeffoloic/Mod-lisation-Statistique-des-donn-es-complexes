@@ -15,6 +15,8 @@ quantitative_vars = df.columns[61:]   # Colonnes I à la fin
 surv12 = df['Surv12']
 surv6 = df['Surv6'] # j'ajoute ça au cas où. 
 
+# Convertir les variables catégorielles en variables numériques
+df = pd.get_dummies(df, drop_first=True)
 
 # Fonction pour effectuer les tests sur les covariables qualitatives
 def test_qualitative_covariates(df, qualitative_vars, surv12):

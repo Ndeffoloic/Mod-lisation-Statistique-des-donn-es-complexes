@@ -26,8 +26,13 @@ print(qualitative_vars)
 surv12 = df['Surv12']
 surv6 = df['Surv6'] # j'ajoute ça au cas où. 
 
-# Remplacement des valeurs NaN par la médianne sur la colonne. 
-df = df.fillna(df.median())
+# Remplacement des valeurs NaN
+# Remplacer les NaN dans les colonnes numériques par la médiane
+df[quantitative_vars] = df[quantitative_vars].apply(lambda x: x.fillna(x.median()), axis=0)
+
+# Remplacer les NaN dans les colonnes non numériques par le mode
+df[qualitative_vars] = df[qualitative_vars].apply(lambda x: x.fillna(x.mode()[0]), axis=0)
+
 # Fonction pour effectuer les tests sur les covariables qualitatives
 def test_qualitative_covariates(df, qualitative_vars, surv12):
     p_values = []

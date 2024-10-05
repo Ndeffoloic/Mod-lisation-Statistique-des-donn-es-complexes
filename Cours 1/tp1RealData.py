@@ -26,13 +26,8 @@ print(qualitative_vars)
 surv12 = df['Surv12']
 surv6 = df['Surv6'] # j'ajoute ça au cas où. 
 
-# Convertir les variables catégorielles en variables numériques
-df = pd.get_dummies(df, drop_first=True)
-# Afficher les noms des colonnes pour vérifier leur existence
-print("Noms des colonnes dans le DataFrame:")
-print(df.columns)
-
-
+# Remplacement des valeurs NaN par la médianne sur la colonne. 
+df = df.fillna(df.median())
 # Fonction pour effectuer les tests sur les covariables qualitatives
 def test_qualitative_covariates(df, qualitative_vars, surv12):
     p_values = []

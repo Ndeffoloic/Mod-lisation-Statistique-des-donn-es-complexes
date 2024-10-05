@@ -1,3 +1,5 @@
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -5,11 +7,20 @@ from scipy.stats import chi2_contingency, ttest_ind
 from statsmodels.stats.multitest import multipletests
 
 # Charger le fichier datacancer.csv
-df = pd.read_csv('datacancer.csv')
+file_name = 'datacancer.csv'
+file_path = os.path.join(os.path.dirname(__file__), file_name)
+df = pd.read_csv(file_path)
+
+# Afficher les noms des colonnes pour vérifier leur existence
+print("Noms des colonnes dans le DataFrame:")
+print(df.columns)
 
 # Sélectionner les covariables qualitatives et quantitatives
-qualitative_vars = df.columns[8:60]  # Colonnes I à BH (indices 8 à 59)
-quantitative_vars = df.columns[61:]   # Colonnes I à la fin
+qualitative_vars = df.loc[:, 'TREATMENT':'Anti_TPO_antibodies_class'].columns  # Colonnes I à BH (indices 8 à 59)
+quantitative_vars = df.loc[:, 'NBCYCLE_CT':].columns  # Colonnes 60 à la fin
+
+print("Noms des colonnes dans le qualitative_vars:")
+print(qualitative_vars)
 
 # Variable d'intérêt
 surv12 = df['Surv12']
@@ -17,6 +28,10 @@ surv6 = df['Surv6'] # j'ajoute ça au cas où.
 
 # Convertir les variables catégorielles en variables numériques
 df = pd.get_dummies(df, drop_first=True)
+# Afficher les noms des colonnes pour vérifier leur existence
+print("Noms des colonnes dans le DataFrame:")
+print(df.columns)
+
 
 # Fonction pour effectuer les tests sur les covariables qualitatives
 def test_qualitative_covariates(df, qualitative_vars, surv12):

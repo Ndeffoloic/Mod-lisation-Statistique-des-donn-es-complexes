@@ -11,13 +11,13 @@ from statsmodels.api import Logit, add_constant
 from statsmodels.stats.multitest import multipletests
 
 # Nom du fichier à ouvrir
-file_name = 'datacancer.txt'
+file_name = 'datacancer.csv'
 
 # Obtenir le chemin complet du fichier
 file_path = os.path.join(os.path.dirname(__file__), file_name)
 
 # Lire le fichier dans un DataFrame avec les bons séparateurs
-data = pd.read_csv(file_path, sep='\t', decimal=',')
+data = pd.read_csv(file_path)
 
 # Sélectionner les variables en utilisant la méthode de Benjamini-Hochberg
 def benjamini_hochberg(pvals, alpha=0.05):

@@ -1,0 +1,12 @@
+Bootstrap errors for Model 1:
+Mean RMSE: 4.507853878697245
+Standard Deviation of RMSE: 0.17054304989398508
+
+Bootstrap errors for Model 2:
+Mean RMSE: 4.512990669515937
+Standard Deviation of RMSE: 0.17290958033206
+
+Bootstrap errors for Model 3:
+Mean RMSE: 4.509161436962515
+Standard Deviation of RMSE: 0.17628705698062666
+

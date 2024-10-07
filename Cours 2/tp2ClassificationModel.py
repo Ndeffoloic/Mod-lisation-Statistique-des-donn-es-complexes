@@ -35,6 +35,7 @@ def benjamini_hochberg(pvals, alpha=0.05):
 # Appliquer la méthode de Benjamini-Hochberg pour sélectionner les variables
 pvals = np.random.rand(data.shape[1] - 1)  # Remplacer par les p-values réelles
 selected_indices = benjamini_hochberg(pvals)
+print("Les indices sélectionnés sont :",selected_indices)
 selected_variables = data.columns[selected_indices]
 
 # Construire le DataFrame avec la variable Surv12 et les covariables sélectionnées

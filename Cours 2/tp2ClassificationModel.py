@@ -18,7 +18,8 @@ file_path = os.path.join(os.path.dirname(__file__), file_name)
 
 # Lire le fichier dans un DataFrame avec les bons séparateurs
 data = pd.read_csv(file_path)
-
+ind = np.where(data.isna().sum(axis=1) == 0)[0]
+data = data.iloc[ind]
 # Sélectionner les variables en utilisant la méthode de Benjamini-Hochberg
 def benjamini_hochberg(pvals, alpha=0.05):
     pvals_sorted = np.sort(pvals)

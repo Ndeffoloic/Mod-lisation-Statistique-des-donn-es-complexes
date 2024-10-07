@@ -1,49 +1,75 @@
+"""
+Fichier: tp2ClassificationModel.py
+Auteur: Loïc NEMBOT
+Date de création: 2023-10-05
+"""
+
 import os
 from contextlib import redirect_stdout
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from scipy.stats import chi2_contingency, ttest_ind
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import auc, confusion_matrix, roc_curve
+from sklearn.metrics import accuracy_score, auc, confusion_matrix, roc_curve
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from statsmodels.api import Logit, add_constant
 from statsmodels.stats.multitest import multipletests
 
-# Nom du fichier à ouvrir
+# Charger le fichier datacancer.csv
 file_name = 'datacancer.csv'
-
-# Obtenir le chemin complet du fichier
 file_path = os.path.join(os.path.dirname(__file__), file_name)
-
-# Lire le fichier dans un DataFrame avec les bons séparateurs
-data = pd.read_csv(file_path)
-ind = np.where(data.isna().sum(axis=1) == 0)[0]
-data = data.iloc[ind]
-# Sélectionner les variables en utilisant la méthode de Benjamini-Hochberg
-def benjamini_hochberg(pvals, alpha=0.05):
-    pvals_sorted = np.sort(pvals)
-    pvals_index = np.argsort(pvals)
-    m = len(pvals)
-    thresholds = np.arange(1, m+1) * alpha / m
-    below_threshold = pvals_sorted <= thresholds
-    if not np.any(below_threshold):
-        return np.array([])
-    max_index = np.max(np.where(below_threshold))
-    return pvals_index[:max_index+1]
-
-# Appliquer la méthode de Benjamini-Hochberg pour sélectionner les variables
-pvals = np.random.rand(data.shape[1] - 1)  # Remplacer par les p-values réelles
-selected_indices = benjamini_hochberg(pvals)
-print("Les indices sélectionnés sont :",selected_indices)
-selected_variables = data.columns[selected_indices]
-
-# Construire le DataFrame avec la variable Surv12 et les covariables sélectionnées
-frame = data[['Surv12'] + list(selected_variables)]
+df = pd.read_csv(file_path)
 
 # Supprimer les individus ayant des données manquantes
-ind = np.where(frame.isna().sum(axis=1) == 0)[0]
-frame = frame.iloc[ind]
+ind = np.where(df.isna().sum(axis=1) == 0)[0]
+df = df.iloc[ind]
+# Sélectionner les covariables qualitatives et quantitatives
+qualitative_vars = df.loc[:, 'TREATMENT':'Anti_TPO_antibodies_class'].columns
+quantitative_vars = df.loc[:, 'NBCYCLE_CT':].columns
+
+# Variable d'intérêt
+surv12 = df['Surv12']
+
+# Remplacer les valeurs NaN
+df[quantitative_vars] = df[quantitative_vars].apply(lambda x: x.fillna(x.median()), axis=0)
+df[qualitative_vars] = df[qualitative_vars].apply(lambda x: x.fillna(x.mode()[0]), axis=0)
+
+# Fonction pour effectuer les tests sur les covariables qualitatives
+def test_qualitative_covariates(df, qualitative_vars, surv12):
+    p_values = []
+    for var in qualitative_vars:
+        contingency_table = pd.crosstab(df[var], surv12)
+        _, p_value, _, _ = chi2_contingency(contingency_table)
+        p_values.append(p_value)
+    return p_values
+
+# Fonction pour effectuer les tests sur les covariables quantitatives
+def test_quantitative_covariates(df, quantitative_vars, surv12):
+    p_values = []
+    for var in quantitative_vars:
+        group1 = df[df['Surv12'] == 0][var]
+        group2 = df[df['Surv12'] == 1][var]
+        _, p_value = ttest_ind(group1, group2)
+        p_values.append(p_value)
+    return p_values
+
+# Effectuer les tests et sauvegarder les valeurs-p
+p_values_qualitative = test_qualitative_covariates(df, qualitative_vars, surv12)
+p_values_quantitative = test_quantitative_covariates(df, quantitative_vars, surv12)
+
+# Agréger les vecteurs de valeurs-p
+p_values_all = p_values_qualitative + p_values_quantitative
+
+# Ajuster les valeurs-p avec la méthode de Benjamini-Hochberg
+_, pvals_corrected, _, _ = multipletests(p_values_all, alpha=0.05, method='fdr_bh')
+
+# Identifier les covariables significatives
+significant_vars = [var for var, pval in zip(qualitative_vars.tolist() + quantitative_vars.tolist(), pvals_corrected) if pval < 0.05]
+
+# Construire le DataFrame avec la variable Surv12 et les covariables sélectionnées
+frame = df[['Surv12'] + significant_vars]
 
 # Appliquer les méthodes forward et backward pour sélectionner les variables dans le modèle logistique
 def forward_selection(data, response):
@@ -107,22 +133,26 @@ plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 plt.title('ROC Curve')
 plt.legend(loc='lower right')
-plt.show()
+plt.savefig('roc_curve.png')
+plt.close()
 
 # Comparer les modèles par validation croisée
 def cross_val_score_auc(model, X, y, cv=5):
     skf = StratifiedKFold(n_splits=cv, shuffle=True, random_state=1)
     aucs = []
+    accuracies = []
     for train_index, test_index in skf.split(X, y):
         X_train, X_test = X.iloc[train_index], X.iloc[test_index]
         y_train, y_test = y.iloc[train_index], y.iloc[test_index]
         model_fit = Logit(y_train, add_constant(X_train)).fit(disp=0)
         y_pred_prob = model_fit.predict(add_constant(X_test))
+        y_pred = (y_pred_prob >= 0.5).astype(int)
         aucs.append(auc(y_test, y_pred_prob))
-    return np.mean(aucs), np.std(aucs)
+        accuracies.append(accuracy_score(y_test, y_pred))
+    return np.mean(aucs), np.std(aucs), np.mean(accuracies), np.std(accuracies)
 
-mean_auc_forward, std_auc_forward = cross_val_score_auc(model_forward, frame[selected_features_forward], frame['Surv12'])
-mean_auc_backward, std_auc_backward = cross_val_score_auc(model_backward, frame[selected_features_backward], frame['Surv12'])
+mean_auc_forward, std_auc_forward, mean_acc_forward, std_acc_forward = cross_val_score_auc(model_forward, frame[selected_features_forward], frame['Surv12'])
+mean_auc_backward, std_auc_backward, mean_acc_backward, std_acc_backward = cross_val_score_auc(model_backward, frame[selected_features_backward], frame['Surv12'])
 
 # Exporter les résultats dans un fichier
 with open('classification_results.txt', 'w') as f:
@@ -145,6 +175,10 @@ with open('classification_results.txt', 'w') as f:
         
         print(f"Cross-validated AUC for forward selection model: {mean_auc_forward:.2f} ± {std_auc_forward:.2f}")
         print(f"Cross-validated AUC for backward selection model: {mean_auc_backward:.2f} ± {std_auc_backward:.2f}")
+        print("\n")
+        
+        print(f"Cross-validated accuracy for forward selection model: {mean_acc_forward:.2f} ± {std_acc_forward:.2f}")
+        print(f"Cross-validated accuracy for backward selection model: {mean_acc_backward:.2f} ± {std_acc_backward:.2f}")
         print("\n")
         
         # Choisir le meilleur modèle pour prédire la survie

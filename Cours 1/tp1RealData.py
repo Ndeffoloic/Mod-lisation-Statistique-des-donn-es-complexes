@@ -1,3 +1,9 @@
+"""
+Fichier: tp1RealData.py
+Auteur: Loïc NEMBOT
+Date de création: 2023-10-05
+"""
+
 import os
 
 import matplotlib.pyplot as plt

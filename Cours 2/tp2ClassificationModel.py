@@ -1,9 +1,3 @@
-"""
-Fichier: tp2ClassificationModel.py
-Auteur: Loïc NEMBOT
-Date de création: 2023-10-05
-"""
-
 import os
 from contextlib import redirect_stdout
 
@@ -25,16 +19,13 @@ df = pd.read_csv(file_path)
 # Supprimer les individus ayant des données manquantes
 ind = np.where(df.isna().sum(axis=1) == 0)[0]
 df = df.iloc[ind]
+
 # Sélectionner les covariables qualitatives et quantitatives
 qualitative_vars = df.loc[:, 'TREATMENT':'Anti_TPO_antibodies_class'].columns
 quantitative_vars = df.loc[:, 'NBCYCLE_CT':].columns
 
 # Variable d'intérêt
 surv12 = df['Surv12']
-
-# Remplacer les valeurs NaN
-df[quantitative_vars] = df[quantitative_vars].apply(lambda x: x.fillna(x.median()), axis=0)
-df[qualitative_vars] = df[qualitative_vars].apply(lambda x: x.fillna(x.mode()[0]), axis=0)
 
 # Fonction pour effectuer les tests sur les covariables qualitatives
 def test_qualitative_covariates(df, qualitative_vars, surv12):
@@ -147,7 +138,13 @@ def cross_val_score_auc(model, X, y, cv=5):
         model_fit = Logit(y_train, add_constant(X_train)).fit(disp=0)
         y_pred_prob = model_fit.predict(add_constant(X_test))
         y_pred = (y_pred_prob >= 0.5).astype(int)
-        aucs.append(auc(y_test, y_pred_prob))
+        
+        # Trier les valeurs de y_test et y_pred_prob
+        sorted_indices = np.argsort(y_test)
+        y_test_sorted = y_test.iloc[sorted_indices]
+        y_pred_prob_sorted = y_pred_prob[sorted_indices]
+        
+        aucs.append(auc(y_test_sorted, y_pred_prob_sorted))
         accuracies.append(accuracy_score(y_test, y_pred))
     return np.mean(aucs), np.std(aucs), np.mean(accuracies), np.std(accuracies)
 

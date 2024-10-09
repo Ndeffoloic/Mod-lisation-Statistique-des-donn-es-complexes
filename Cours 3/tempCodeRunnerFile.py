@@ -1,0 +1,7 @@
+plt.plot(alphas, coefs)
+plt.xlabel('Lambda')
+plt.ylabel('Coefficients')
+plt.title('Ridge Regression Coefficients')
+plt.axhline(0, color='black', linestyle='--')
+plt.legend(data.columns[:8], loc='upper right')
+plt.show()

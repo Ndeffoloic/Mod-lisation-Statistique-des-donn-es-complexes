@@ -3,6 +3,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 from sklearn.linear_model import Lasso, Ridge
 
 # Nom du fichier à ouvrir
@@ -16,14 +17,23 @@ data = pd.read_csv(file_path, sep='\t', header=0, decimal='.')
 
 print(data.columns)
 print(data.head())
+
 # Préparer les données pour la régression
-X = data.iloc[:, [i for i in range(1, 8) if i != 7]].values
+X = data.iloc[:, 1:8].values
 print(X)
-Y = data.iloc[:, 8].values
+
+# Tracer la matrice de corrélation entre les différentes variables (colonnes 1 à 8)
+correlation_matrix = data.iloc[:, 1:8].corr()
+plt.figure(figsize=(10, 8))
+plt.title('Matrice de Corrélation')
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f')
+plt.show()
+Y = data.iloc[:, 9].values
 print(Y)
 # Ridge regression
 # Définir une plage de valeurs pour le paramètre de régularisation alpha (lambda)
 alphas = np.arange(0, 25, 0.05)
+alphasLasso = np.arange(0, 1, 0.05)
 
 # Initialiser les modèles de régression Ridge et Lasso
 ridge = Ridge()
@@ -43,7 +53,8 @@ for a in alphas:
     
     # Ajouter les coefficients du modèle ajusté à la liste
     coefsRidge.append(ridge.coef_)
-
+for a in alphasLasso : 
+    
     # Définir le paramètre alpha du modèle Lasso
     lasso.set_params(alpha=a)
     
@@ -72,7 +83,7 @@ plt.legend(loc='upper right')
 # Tracé des coefficients Lasso
 plt.subplot(1, 2, 2)
 for i in range(coefsLasso.shape[1]):
-    plt.plot(alphas, coefsLasso[:, i], label=data.columns[i+1])
+    plt.plot(alphasLasso, coefsLasso[:, i], label=data.columns[i+1])
 plt.xlabel('Lambda')
 plt.ylabel('Coefficients')
 plt.title('Lasso Regression Coefficients')

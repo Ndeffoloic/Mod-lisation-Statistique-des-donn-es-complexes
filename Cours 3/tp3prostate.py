@@ -30,7 +30,6 @@ ridge = Ridge()
 lasso = Lasso()
 
 # Effectuer la validation croisée pour trouver le meilleur alpha pour Ridge
-
 ridge_scores = [cross_val_score(Ridge(alpha=a), X, Y, cv=5).mean() for a in alphas]
 best_alpha_ridge = alphas[np.argmax(ridge_scores)]
 print(f"Best alpha for Ridge: {best_alpha_ridge}")
@@ -63,4 +62,39 @@ df_coefs.set_index('Variable').plot(kind='bar')
 plt.title('Coefficients des variables pour Ridge et Lasso')
 plt.xlabel('Variables')
 plt.ylabel('Coefficients')
+plt.show()
+
+# Sélectionner les 3 variables les plus importantes basées sur les coefficients absolus de Lasso
+important_vars = df_coefs['Variable'][np.argsort(np.abs(lasso_coefs))[-3:]].values
+print(f"Les 3 variables les plus importantes: {important_vars}")
+
+# Préparer les nouvelles données avec les 3 variables les plus importantes
+X_important = data[important_vars].values
+
+# Ajuster un nouveau modèle Ridge et Lasso avec ces 3 variables
+ridge.fit(X_important, Y)
+lasso.fit(X_important, Y)
+
+# Prédire les valeurs ajustées
+ridge_preds = ridge.predict(X_important)
+lasso_preds = lasso.predict(X_important)
+
+# Tracer les valeurs ajustées par rapport aux valeurs réelles
+plt.figure(figsize=(12, 6))
+
+plt.subplot(1, 2, 1)
+plt.scatter(Y, ridge_preds)
+plt.plot([Y.min(), Y.max()], [Y.min(), Y.max()], 'k--', lw=2)
+plt.xlabel('Valeurs réelles')
+plt.ylabel('Valeurs ajustées')
+plt.title('Ridge Regression')
+
+plt.subplot(1, 2, 2)
+plt.scatter(Y, lasso_preds)
+plt.plot([Y.min(), Y.max()], [Y.min(), Y.max()], 'k--', lw=2)
+plt.xlabel('Valeurs réelles')
+plt.ylabel('Valeurs ajustées')
+plt.title('Lasso Regression')
+
+plt.tight_layout()
 plt.show()
